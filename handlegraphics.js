@@ -63,10 +63,26 @@ function AddCol() {
 function MakeBoardElement() {
     const element = document.createElement("div")
     element.classList.add("board-element") 
+    element.dataset.boardElement = ""
     element.insertAdjacentHTML('beforeend', '<div></div>')
-    element.insertAdjacentHTML('beforeend', '<div><input class="small-input" data-col-player-input="live" size="1"></input></div>')
-    element.insertAdjacentHTML('beforeend', '<div><input class="small-input" data-row-player-input="live" size="1"></input></div>')
-    element.insertAdjacentHTML('beforeend', '<div></div>')
+
+    const col_div = document.createElement("div")
+    col_div.dataset.playerBackgroundColor = "col"
+    col_div.style.backgroundColor = COL_PLAYER_COLOR
+    col_div.insertAdjacentHTML('beforeend', '<input class="small-input" data-col-player-input="live" size="1"></input>')
+    element.appendChild(col_div)
+
+    const row_div = document.createElement("div")
+    row_div.dataset.playerBackgroundColor = "row"
+    row_div.style.backgroundColor = ROW_PLAYER_COLOR
+    row_div.insertAdjacentHTML('beforeend', '<input class="small-input" data-row-player-input="live" size="1"></input>')
+    element.appendChild(row_div)
+
+    const blendiv = document.createElement("div")
+    blendiv.dataset.playerBackgroundColor = "blend"
+    blendiv.style.backgroundColor = BLEND_COLOR
+    element.appendChild(blendiv)
+
     return element
 }
 
@@ -74,7 +90,7 @@ function MakeBoardElement() {
 function MakeLeftSideDeleteButton(label) {
     const element = document.createElement("div")
     element.dataset.deleteRowDiv = ""
-    element.insertAdjacentHTML('beforeend', `<button class="delete-btn" data-delete-row-button><span>${label}</span></button>`)
+    element.insertAdjacentHTML('beforeend', `<button class="delete-btn row-color" style="background-color: ${ROW_PLAYER_COLOR};" data-delete-row-button><span>${label}</span></button>`)
     element.classList.add("horisontal-align")
 
     element.firstChild.addEventListener('click', () => {
@@ -89,7 +105,7 @@ function MakeTopDeleteButton(label) {
     const element = document.createElement("div")
     element.dataset.colIsLive = "true"
     element.dataset.deleteColDiv = ""
-    element.insertAdjacentHTML('beforeend', `<button class="delete-btn" data-delete-column-button><span>${label}</span></button>`)
+    element.insertAdjacentHTML('beforeend', `<button class="delete-btn col-color" style="background-color: ${COL_PLAYER_COLOR};" data-delete-column-button><span>${label}</span></button>`)
     element.classList.add("vertical-align")
 
     element.firstChild.addEventListener('click', () => {
@@ -160,58 +176,3 @@ function clearOutput() {
 
     output_div.innerHTML = "<h4>Outputs:</h4>"
 }
-
-function CreateExamplesMenu() {
-    const examples_menu_content = document.querySelector("[data-examples-menu-content]")
-
-    ARRAY_EXAMPLES.forEach( (example, index) => {
-        const element = document.createElement("div")
-        const text = document.createElement("p")
-        element.classList.add("mouse-click-icon")
-        element.classList.add("hover-grey")
-        element.dataset.index = index
-        text.innerHTML = example.name
-        element.appendChild(text)
-        element.addEventListener('click', () => {
-            clearOutput()
-            CreateCustomBoard(element.dataset.index)
-        })
-        examples_menu_content.appendChild(element)
-    })
-}
-
-function CreateCustomBoard(index) {
-
-    ClearBoard()
-
-    const setup_obj = ARRAY_EXAMPLES[parseInt(index)]
-    console.log(setup_obj)
-
-    for (let i = 0; i < setup_obj.x_dimension; i++) {AddCol()}
-    for (let i = 0; i < setup_obj.y_dimension; i++) {AddRow()}
-
-    const custom_row_inputs = setup_obj.row_body
-    const custom_col_inputs = setup_obj.column_body
-
-    const row_player_inputs = document.querySelectorAll("[data-row-player-input]")
-    const col_player_inputs = document.querySelectorAll("[data-col-player-input]")
-
-    row_player_inputs.forEach( (input, index) => {
-        input.value = custom_row_inputs[index]
-    })
-
-    col_player_inputs.forEach( (input, index) => {
-        input.value = custom_col_inputs[index]
-    })
-}
-
-function ClearBoard() {
-    const number_of_columns = getComputedStyle(BOARD).getPropertyValue('--num-of-cols') - 1
-    const number_of_rows = getComputedStyle(BOARD).getPropertyValue('--num-of-rows') - 1
-    const delete_col_divs = document.querySelectorAll("[data-delete-col-div]")
-    const delete_row_divs = document.querySelectorAll("[data-delete-row-div]")
-
-    for (let i = number_of_columns-1; i >= 0; i--) {DeleteColumn(delete_col_divs[i] , validate=false)}
-    for (let i =number_of_rows-1; i >= 0; i--) {DeleteRow(delete_row_divs[i] , validate=false)}
-}
-CreateExamplesMenu()
