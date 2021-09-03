@@ -3932,19 +3932,33 @@
             return constraints
         }
         
-        function greyOutColumn(column_no , color="darkgrey") {
+        function greyOutSquare(square) {
+            square.style.backgroundColor = GREY_1
+            square.querySelector('[data-player-background-color="col"]').style.backgroundColor = GREY_2
+            square.querySelector('[data-player-background-color="row"]').style.backgroundColor = GREY_2
+            square.querySelector('[data-player-background-color="blend"]').style.backgroundColor = GREY_3
+        }
+
+        function greyOutColumn(column_no) {
+            // grey out column button
+            const deletebuttons = document.querySelectorAll('[data-delete-column-button]')
+            deletebuttons[column_no].style.backgroundColor = GREY_2
+
             const rows = document.querySelectorAll('[data-row]')
             rows.forEach( (row) => {
                 const board_elements = row.childNodes
-                board_elements[column_no+1].style.backgroundColor = color
+                greyOutSquare(board_elements[column_no+1])
             })
         }
         
-        function greyOutRow(row_no , color="darkgrey") {
+        function greyOutRow(row_no) {
+            // grey out row button
+            const deletebuttons = document.querySelectorAll('[data-delete-row-button]')
+            deletebuttons[row_no].style.backgroundColor = GREY_2
             const row = document.querySelectorAll('[data-row]')[row_no]
             const board_elements = row.childNodes
             for(let i = 1; i < board_elements.length; i++) {
-                board_elements[i].style.backgroundColor = color
+                greyOutSquare(board_elements[i])
             }
         }
         
@@ -4020,8 +4034,46 @@
             return parseInt(total_elements / num_of_rows)
         }
         
+        function removeBoardColor() {
+            const color_divs = document.querySelectorAll('[data-player-background-color]')
+
+            color_divs.forEach( (div) => {
+                div.style.backgroundColor = null
+            })
+        }
+
+        function addBoardColor() {
+            const color_divs = document.querySelectorAll('[data-player-background-color]')
+
+            color_divs.forEach( (div) => {
+                if (div.dataset.playerBackgroundColor === "col") {
+                    div.style.backgroundColor = COL_PLAYER_COLOR
+                } else if (div.dataset.playerBackgroundColor === "row") {
+                    div.style.backgroundColor = ROW_PLAYER_COLOR
+                } else {
+                    div.style.backgroundColor = BLEND_COLOR
+                }
+            })
+
+            const board_elements = document.querySelectorAll('[data-board-element]')
+            board_elements.forEach( (element) => {
+                element.style.backgroundColor = ""
+            })
+
+            const col_delete_buttons = document.querySelectorAll('[data-delete-column-button')
+            const row_delete_buttons = document.querySelectorAll('[data-delete-row-button]')
+
+            col_delete_buttons.forEach( (button) => {
+                button.style.backgroundColor = COL_PLAYER_COLOR
+            })
+
+            row_delete_buttons.forEach( (button) => {
+                button.style.backgroundColor = ROW_PLAYER_COLOR
+            })
+        }
 
         function lockButton() {
+            console.log('lock')
             resetDomination()
             const button = document.querySelector('[data-locked]')
             const next_step_button = document.querySelector('[data-next-step-button]')
@@ -4030,12 +4082,12 @@
             next_step_button.dataset.rowOrCol = "col"
             // unlock:
             if (button.dataset.locked == "true") {
-                revertBoardColor()
+                //revertBoardColor()
                 reEnableBoard()
                 button.dataset.locked = false
                 next_step_button.disabled = true
                 button.innerHTML = '<li class="fas fa-lock-open" aria-hidden="true"></li>'
-        
+                addBoardColor() 
             } // lock:
             else {
                 if (!ValidateInputs()) return
@@ -4043,6 +4095,7 @@
                 button.dataset.locked = true
                 next_step_button.disabled = false
                 button.innerHTML = '<li class="fas fa-lock" aria-hidden="true"></li>'
+                //removeBoardColor()
             }
         }
         
@@ -4119,7 +4172,7 @@
         function revertBoardColor(color="white") {
             const number_of_rows = document.querySelectorAll("[data-row-is-live]").length
             for (let i = 0; i < number_of_rows; i++) {
-                greyOutRow(i , "white")
+                greyOutRow(i , "white" , "white" , "white")
             }
         }
         
@@ -4151,7 +4204,64 @@
         
         const lock_button = document.querySelector('[data-locked]')
         lock_button.addEventListener('click' , lockButton)
-    
+
+        function CreateExamplesMenu() {
+            const examples_menu_content = document.querySelector("[data-examples-menu-content]")
+        
+            ARRAY_EXAMPLES.forEach( (example, index) => {
+                const element = document.createElement("div")
+                const text = document.createElement("p")
+                element.classList.add("mouse-click-icon")
+                element.classList.add("hover-grey")
+                element.dataset.index = index
+                text.innerHTML = example.name
+                element.appendChild(text)
+                element.addEventListener('click', () => {
+                    clearOutput()
+                    CreateCustomBoard(element.dataset.index)
+                })
+                examples_menu_content.appendChild(element)
+            })
+        }
+        
+        function CreateCustomBoard(index) {
+        
+            ClearBoard()
+        
+            const setup_obj = ARRAY_EXAMPLES[parseInt(index)]
+            console.log(setup_obj)
+        
+            for (let i = 0; i < setup_obj.x_dimension; i++) {AddCol()}
+            for (let i = 0; i < setup_obj.y_dimension; i++) {AddRow()}
+        
+            const custom_row_inputs = setup_obj.row_body
+            const custom_col_inputs = setup_obj.column_body
+        
+            const row_player_inputs = document.querySelectorAll("[data-row-player-input]")
+            const col_player_inputs = document.querySelectorAll("[data-col-player-input]")
+        
+            row_player_inputs.forEach( (input, index) => {
+                input.value = custom_row_inputs[index]
+            })
+        
+            col_player_inputs.forEach( (input, index) => {
+                input.value = custom_col_inputs[index]
+            })
+        
+            lockButton(); lockButton()
+        }
+        
+        function ClearBoard() {
+            const number_of_columns = getComputedStyle(BOARD).getPropertyValue('--num-of-cols') - 1
+            const number_of_rows = getComputedStyle(BOARD).getPropertyValue('--num-of-rows') - 1
+            const delete_col_divs = document.querySelectorAll("[data-delete-col-div]")
+            const delete_row_divs = document.querySelectorAll("[data-delete-row-div]")
+        
+            for (let i = number_of_columns-1; i >= 0; i--) {DeleteColumn(delete_col_divs[i] , validate=false)}
+            for (let i =number_of_rows-1; i >= 0; i--) {DeleteRow(delete_row_divs[i] , validate=false)}
+        }
+        CreateExamplesMenu()
+        CreateCustomBoard(0)
     },{"../javascript-lp-solver/src/solver.js":21}],23:[function(require,module,exports){
     
     },{}]},{},[22]);
