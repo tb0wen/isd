@@ -43,9 +43,9 @@ body {
 }*/
 
 .board .row > div {
-    outline: 2px solid; /* used instead of border*/
-    margin-top: 2px;
-    margin-left: 2px;
+    outline: 1px solid; /* used instead of border*/
+    margin-top: 1px;
+    margin-left: 1px;
 }
 .board .row .board-element {
     padding: 10px;
@@ -92,6 +92,20 @@ body {
 .button:active li {
     color: black;
 }
+
+.button .stay-black:active {
+    color: black;
+}
+.col-color {
+    --col-color: red;
+    background-color: var(--col-color);
+}
+
+.row-color {
+    --row-color: blue;
+    background-color: var(--row-color);
+}
+
 .delete-btn {
     --red: rgba(240, 69, 69, 0.8);
     border-radius: 12px;
@@ -103,10 +117,6 @@ body {
     text-decoration: none;
     display: inline-block;
     font-size: 16px;
-}
-
-.button .stay-black:active {
-    color: black;
 }
 
 .delete-btn[disabled]:hover span {display: block;}
