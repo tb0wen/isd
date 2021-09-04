@@ -3737,7 +3737,7 @@
     },{"./main":20}],22:[function(require,module,exports){
     
         function NewIteratedDominanceStep() {
-            if (document.querySelector('[data-locked]').dataset.locked === "false") return
+            if (document.querySelector('[data-locked]').dataset.locked === "false") {lockButton()}
             const next_step_button = document.querySelector('[data-next-step-button]') 
             var current_key = next_step_button.dataset.currentKey
             var current_player = next_step_button.dataset.rowOrCol
@@ -4085,7 +4085,7 @@
                 //revertBoardColor()
                 reEnableBoard()
                 button.dataset.locked = false
-                next_step_button.disabled = true
+                button.disabled = true
                 button.innerHTML = '<li class="fas fa-lock-open" aria-hidden="true"></li>'
                 addBoardColor() 
             } // lock:
@@ -4093,7 +4093,7 @@
                 if (!ValidateInputs()) return
                 disableBoard()
                 button.dataset.locked = true
-                next_step_button.disabled = false
+                button.disabled = false
                 button.innerHTML = '<li class="fas fa-lock" aria-hidden="true"></li>'
                 //removeBoardColor()
             }
