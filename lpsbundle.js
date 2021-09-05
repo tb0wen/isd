@@ -3803,7 +3803,9 @@
                 }
 
                 if (current_key === ORIGINAL_KEY) {
-                    console.log("model is fully optimised already!")
+                    addTextToOutput("The game is now fully optimised.")
+                    const next_step_button = document.querySelector('[data-next-step-button]') 
+                    next_step_button.disabled = true
                     return
                 }
             }
@@ -3903,12 +3905,16 @@
                 })
             }
 
+            addTextToOutput(output_line)
+        }
+
+        function addTextToOutput(text) {
             const p_line = document.createElement("p")
-            p_line.innerHTML = output_line
+            p_line.innerHTML = text
             const output_div = document.querySelector('[data-output-div]')
             output_div.appendChild(p_line)
         }
-
+        
         function IsDominated(constraints , variables) {
             results = getDominationResults(constraints , variables)
             const result = results["result"]
@@ -4077,6 +4083,7 @@
             resetDomination()
             const button = document.querySelector('[data-locked]')
             const next_step_button = document.querySelector('[data-next-step-button]')
+            next_step_button.disabled = false
 
             next_step_button.dataset.currentKey = "a"
             next_step_button.dataset.rowOrCol = "col"
