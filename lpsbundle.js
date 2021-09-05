@@ -3910,6 +3910,7 @@
 
         function addTextToOutput(text) {
             const p_line = document.createElement("p")
+            p_line.style.height = "20px"
             p_line.innerHTML = text
             const output_div = document.querySelector('[data-output-div]')
             output_div.appendChild(p_line)
