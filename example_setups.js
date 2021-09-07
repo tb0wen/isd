@@ -74,7 +74,7 @@ const ARRAY_EXAMPLES = [
     }
     ,
     {
-        name: "simple 4x4 ISD solvable",
+        name: "4x4 ISD solvable",
         x_dimension: 4,
         y_dimension: 4,
         row_body: [
