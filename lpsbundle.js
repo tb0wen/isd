@@ -3803,7 +3803,7 @@
                 }
 
                 if (current_key === ORIGINAL_KEY) {
-                    addTextToOutput("The game is now fully optimised.")
+                    addTextToOutput("Iterated Strict Dominance has completed.")
                     const next_step_button = document.querySelector('[data-next-step-button]') 
                     next_step_button.disabled = true
                     return
@@ -3879,7 +3879,6 @@
                 "constraints": constraints,
                 "variables": variables,
             }
-            console.log(solver.Solve(model))
             return solver.Solve(model)
         }
 
@@ -3974,12 +3973,14 @@
             
             let lowest = 0
             all_live_inputs.forEach( (input) => {
-                if (parseFloat(input) < lowest) {
-                    lowest = parseFloat(input)
+                const value = input.value
+                if (parseFloat(value) < lowest) {
+                    lowest = parseFloat(value)
                 }
             })
             return lowest
         }
+
         function createRowPlayerVariables() {
             const variables = {}
         
@@ -3987,7 +3988,7 @@
             const row_player_inputs = document.querySelectorAll('[data-row-player-input="live"]')
             const number_of_rows = getNumberOfLiveRows()
             const number_of_columns = getNumberOfLiveColumns()
-            const add_to_make_positive = getLowestNegativeInput('data-row-player-input') + 1
+            const add_to_make_positive = 1 - getLowestNegativeInput('data-row-player-input')
             
             for (let i = 0; i < parseInt(number_of_rows); i++) {
                 const obj_label = live_rows[i].firstChild.firstChild.firstChild.innerHTML
@@ -4010,7 +4011,7 @@
             const col_player_inputs = document.querySelectorAll('[data-col-player-input="live"]')
             const number_of_rows = getNumberOfLiveRows()
             const number_of_columns = getNumberOfLiveColumns()
-            const add_to_make_positive = getLowestNegativeInput('data-col-player-input') + 1
+            const add_to_make_positive = 1 - getLowestNegativeInput('data-col-player-input') 
         
             for (let i = 0; i < number_of_columns*number_of_rows; i++) {
             }
@@ -4080,7 +4081,6 @@
         }
 
         function lockButton() {
-            console.log('lock')
             resetDomination()
             const button = document.querySelector('[data-locked]')
             const next_step_button = document.querySelector('[data-next-step-button]')
@@ -4237,7 +4237,6 @@
             ClearBoard()
         
             const setup_obj = ARRAY_EXAMPLES[parseInt(index)]
-            console.log(setup_obj)
         
             for (let i = 0; i < setup_obj.x_dimension; i++) {AddCol()}
             for (let i = 0; i < setup_obj.y_dimension; i++) {AddRow()}
