@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://thomasbeso.github.io/isd/styles.css">
+    <title>Iterated Dominance</title>
+</head>
+<body>
+    
+    <div class="dropdown">
+        <button class="dropbtn">Examples</button>
+        <div class="dropdown-content" data-examples-menu-content>
+        <!--example board setups added in js-->
+        </div>
+    </div> 
+
+    <div class="board" id="board" data-board>
+        <div class="row" data-delete-buttons-row>
+            <div class="no-border"></div>
+            <div class="vertical-align">
+                <button class="add-btn" onclick="AddCol()" data-add-new-col-button>+</button>
+            </div>
+        </div>
+        <div class="row">
+            <div class="vertical-align">
+                <button class="add-btn" onclick="AddRow()" data-add-new-row-button>+</button>
+            </div>
+        </div>
+    </div>
+    <div class="right-align">
+        
+        <button class="button" data-next-step-button data-current-key="a" data-row-or-col="col" data-first-click="true">Next Step</button>
+            <button class="button" onclick="clearOutput()" data-locked="false" disabled><li class="fas fa-lock-open"></li></button>
+    </div>
+
+    <div class="outputs" data-output-div>
+        <h4>Outputs:</h4>
+    </div>
+    
+    
+</body>
+
+<script src="https://thomasbeso.github.io/isd/example_setups.js"></script>
+<script src="https://thomasbeso.github.io/isd/constants.js"></script>
+<script src="https://thomasbeso.github.io/isd/handlegraphics.js"></script>
+<script src="https://thomasbeso.github.io/isd/lpsbundle.js"></script>
+<script src="https://kit.fontawesome.com/8cc8ac781d.js" crossorigin="anonymous"></script>
+</html>
