@@ -10,6 +10,14 @@
 */
 const ARRAY_EXAMPLES = [
     {
+        name: "Default 2x2",
+        x_dimension: 2,
+        y_dimension: 2,
+        row_body: [-1,3,2,0],
+        column_body: [3,2,4,0]
+    }
+    ,
+    {
         name: "Dominance (2x2)",
         x_dimension: 2,
         y_dimension: 2,
@@ -63,6 +71,22 @@ const ARRAY_EXAMPLES = [
         y_dimension: 4,
         row_body: [3,4,-5,0,3,-2,9,3,0,0,4,5],
         column_body: [3,2,5,5,8,8,-1,2,-3,1,1,2]
+    }
+    ,
+    {
+        name: "simple 4x4 ISD solvable",
+        x_dimension: 4,
+        y_dimension: 4,
+        row_body: [
+            3,5,7,8,
+            2,6,8,7,
+            2,5,8,8,
+            2,5,7,9],
+        column_body: [
+            3,2,2,2,
+            5,3,4,4,
+            7,12,8,9,
+            5,4,4,3]
     }
     ,
     {
