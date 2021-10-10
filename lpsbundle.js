@@ -3737,7 +3737,8 @@
     },{"./main":20}],22:[function(require,module,exports){
     
         function NewIteratedDominanceStep() {
-            if (document.querySelector('[data-locked]').dataset.locked === "false") {lockButton()}
+            if (!ValidateInputs()) return
+            if (document.querySelector('[data-locked]').dataset.locked === "false") {Lock()}
             const next_step_button = document.querySelector('[data-next-step-button]') 
             var current_key = next_step_button.dataset.currentKey
             var current_player = next_step_button.dataset.rowOrCol
@@ -4080,30 +4081,41 @@
             })
         }
 
-        function lockButton() {
-            resetDomination()
+        function Unlock() {
+            reEnableBoard()
             const button = document.querySelector('[data-locked]')
             const next_step_button = document.querySelector('[data-next-step-button]')
             next_step_button.disabled = false
+            button.dataset.locked = false
+            button.disabled = true
+            button.innerHTML = '<li class="fas fa-lock-open" aria-hidden="true"></li>'
+            addBoardColor() 
+        }
+
+        function Lock() {
+            if (!ValidateInputs()) return
+            resetDomination()
+            const button = document.querySelector('[data-locked]')
+            const next_step_button = document.querySelector('[data-next-step-button]')
 
             next_step_button.dataset.currentKey = "a"
             next_step_button.dataset.rowOrCol = "col"
+
+            
+            disableBoard()
+            button.dataset.locked = true
+            button.disabled = false
+            button.innerHTML = '<li class="fas fa-lock" aria-hidden="true"></li>'
+        }
+
+        function lockButton() {
+            const button = document.querySelector('[data-locked]')
             // unlock:
             if (button.dataset.locked == "true") {
-                //revertBoardColor()
-                reEnableBoard()
-                button.dataset.locked = false
-                button.disabled = true
-                button.innerHTML = '<li class="fas fa-lock-open" aria-hidden="true"></li>'
-                addBoardColor() 
+                Unlock()
             } // lock:
             else {
-                if (!ValidateInputs()) return
-                disableBoard()
-                button.dataset.locked = true
-                button.disabled = false
-                button.innerHTML = '<li class="fas fa-lock" aria-hidden="true"></li>'
-                //removeBoardColor()
+                Lock()
             }
         }
         
@@ -4255,7 +4267,7 @@
                 input.value = custom_col_inputs[index]
             })
         
-            lockButton(); lockButton()
+            Unlock()
         }
         
         function ClearBoard() {
